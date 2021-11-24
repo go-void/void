@@ -2,6 +2,9 @@
 package router
 
 import (
+	"fmt"
+
+	"github.com/go-void/void/internal/config"
 	"github.com/go-void/void/internal/router/handlers"
 
 	"github.com/labstack/echo/v4"
@@ -11,9 +14,10 @@ import (
 type Router struct {
 	echo    *echo.Echo
 	handler *handlers.Handler
+	config  config.RouterOptions
 }
 
-func New() *Router {
+func New(c config.RouterOptions) *Router {
 	e := echo.New()
 
 	// Set debug mode off
@@ -29,19 +33,21 @@ func New() *Router {
 	}))
 
 	return &Router{
-		echo: e,
+		config: c,
+		echo:   e,
 	}
 }
 
 func (r *Router) AddRoutes(handle *handlers.Handler) {
 	//// UNPROTECTED ROUTES ////
 	// SPA
-	r.echo.Use(middleware.Static(""))
+	r.echo.Use(middleware.Static(r.config.Path))
 
 	// Prometheus metrics
 	r.echo.GET("/metrics", handle.GetMetrics)
 
 	//// PROTECTED ROUTES ////
+	// API
 	api := r.echo.Group("/api")
 
 	// Domains
@@ -51,5 +57,15 @@ func (r *Router) AddRoutes(handle *handlers.Handler) {
 	api.GET("/domains", handle.GetDomains)
 	api.PUT("/domains", handle.AddDomain)
 
+	// STATS
+	stats := r.echo.Group("/stats")
+	stats.GET("/queries", handle.GetQueries)
+	stats.GET("/queries/:id", handle.GetQuery)
+
 	r.handler = handle
+}
+
+func (r *Router) Run() error {
+	port := fmt.Sprintf(":%d", r.config.Port)
+	return r.echo.Start(port)
 }

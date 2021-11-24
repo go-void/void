@@ -1,4 +1,4 @@
-# void
+# Void
 
 Void is a DNS level adblocker written in Go. It uses [Portal](https://github.com/go-void/portal) as a DNS server.
 
