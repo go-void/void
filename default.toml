@@ -1,0 +1,27 @@
+[dns]
+    [collector]
+    anonymize   = false
+	enabled     = true
+	max_entries = 10000
+	interval    = 600
+	backend     = "default"
+
+    [resolver]
+    cache_enabled = true
+	mode          = "r"
+	hint_path     = ""
+	max_expire    = 300
+
+    [filter]
+    ttl  = 0
+	mode = "null"
+
+    [server]
+    cache_enabled = true
+	address       = "127.0.0.1"
+	network       = "udp"
+	port          = 53
+
+[router]
+port = 8090
+path = ""
