@@ -12,11 +12,21 @@ import (
 type Config struct {
 	DNSOptions    *pconfig.Config `toml:"dns"`
 	RouterOptions RouterOptions   `toml:"router"`
+	StoreOptions  StoreOptions    `toml:"store"`
 }
 
 type RouterOptions struct {
 	Port int    `toml:"port"`
 	Path string `toml:"path"`
+}
+
+type StoreOptions struct {
+	Username string `toml:"username"`
+	Password string `toml:"password"`
+	Database string `toml:"database"`
+	Backend  string `toml:"backend"`
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
 }
 
 // Default returns a config with default values

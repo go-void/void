@@ -52,15 +52,33 @@ func (r *Router) AddRoutes(handle *handlers.Handler) {
 
 	// Domains
 	api.DELETE("/domains/:id", handle.DeleteDomain)
-	api.POST("/domains", handle.UpdateDomain)
+	api.POST("/domains/:id", handle.UpdateDomain)
 	api.GET("/domains/:id", handle.GetDomain)
 	api.GET("/domains", handle.GetDomains)
 	api.PUT("/domains", handle.AddDomain)
 
+	// Filters
+	api.DELETE("/filters/:id", handle.DeleteFilter)
+	api.POST("/filters/:id", handle.UpdateFilter)
+	api.GET("/filters/:id", handle.GetFilter)
+	api.GET("/filters", handle.GetFilters)
+	api.PUT("/filters", handle.AddFilter)
+
+	// Rules per filter
+	filters := api.Group("/filters")
+	filters.DELETE("/:fid/rules/:rid", handle.DeleteRule)
+	filters.POST("/:fid/rules/:rid", handle.UpdateRule)
+	filters.GET("/:fid/rules/:rid", handle.GetRule)
+	filters.GET("/:fid/rules", handle.GetRules)
+	filters.PUT("/:fid/rules", handle.AddRule)
+
 	// STATS
 	stats := r.echo.Group("/stats")
-	stats.GET("/queries", handle.GetQueries)
-	stats.GET("/queries/:id", handle.GetQuery)
+	stats.GET("/queries/:id", handle.GetQueryStat)
+	stats.GET("/queries", handle.GetQueryStats)
+
+	stats.GET("/filters/:id", handle.GetFilterStat)
+	stats.GET("/filters", handle.GetFilterStats)
 
 	r.handler = handle
 }

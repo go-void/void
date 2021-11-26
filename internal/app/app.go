@@ -38,7 +38,10 @@ func New(path string) (*App, error) {
 	srv := server.New()
 	srv.Configure(cfg.DNSOptions)
 
-	str := store.New()
+	str, err := store.New(cfg.StoreOptions)
+	if err != nil {
+		return nil, err
+	}
 
 	return &App{
 		router: rtr,
