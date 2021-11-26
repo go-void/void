@@ -25,3 +25,11 @@
 [router]
 port = 8090
 path = ""
+
+[store]
+username = ""
+password = ""
+database = "void"
+backend  = "mysql"
+host     = "127.0.0.1"
+port     = 3306
